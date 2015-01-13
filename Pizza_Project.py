@@ -115,6 +115,10 @@ def read_dataset(path):
 	
 def hasSubredditInCommon(graph, m, n):
 	subreddit = graph.getStringVectorProperty("requester_subreddits_at_request")
+	print set(subreddit.getNodeValue(m))
+	print set(subreddit.getNodeValue(n))
+	print (set(subreddit.getNodeValue(m)) - set(subreddit.getNodeValue(n)))
+	print "*************************"
 	if not len(set(subreddit.getNodeValue(m)) - set(subreddit.getNodeValue(n))) == 0 :
 		return True
 	return False
