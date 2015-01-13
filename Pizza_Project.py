@@ -71,41 +71,51 @@ def main(graph):
 			elif valueType is list:
 				graph.getStringVectorProperty(key).setNodeValue(newNode,r[key])
 
-	gotPizza = graph.addSubGraph("gotPizza")
-	didntGotPizza = graph.addSubGraph("didntGotPizza")
+	nodes = list(graph.getNodes())
+	nbNodes = len(nodes)
+	
+	for i in range(0,nbNodes-1):
+		for j in range(i+1,nbNodes):
+				if hasSubredditInCommon(graph, nodes[i], nodes[j]):
+					graph.addEdge(nodes[i],nodes[j])
+
+	GP = []
+	DGP = []
 	gotPizzaProperty = graph.getBooleanProperty('requester_received_pizza')
 	for n in graph.getNodes():
 		if gotPizzaProperty.getNodeValue(n):
-			gotPizza.addNode(n)
+			GP.append(n)
 		else:
-			didntGotPizza.addNode(n)
-			
-	inTestSet = gotPizza.addSubGraph('in test set')
-	outTestSet = gotPizza.addSubGraph('out of test set')
+			DGP.append(n)
+	gotPizza = graph.inducedSubGraph(GP)
+	gotPizza.setName("gotPizza")	
+	didntGotPizza = graph.inducedSubGraph(DGP)
+	didntGotPizza.setName("didntGotPizza")
+	
+	ITS = []
+	OTS = []
 	inTestSetProperty = graph.getBooleanProperty('in_test_set')
 	for n in gotPizza.getNodes() :
 		if inTestSetProperty.getNodeValue(n):
-			inTestSet.addNode(n)
+			ITS.append(n)
 		else:
-			outTestSet.addNode(n)
-						
-	inTestSet = didntGotPizza.addSubGraph('in test set')
-	outTestSet = didntGotPizza.addSubGraph('out of test set')
+			OTS.append(n)
+	inTestSet = gotPizza.inducedSubGraph(ITS)
+	inTestSet.setName("inTestSet")
+	outTestSet = gotPizza.inducedSubGraph(OTS)
+	outTestSet.setName("outTestSet")
+	
+	ITS = []
+	OTS = []
 	for n in didntGotPizza.getNodes() :
 		if inTestSetProperty.getNodeValue(n):
-			inTestSet.addNode(n)
+			ITS.append(n)
 		else:
-			outTestSet.addNode(n)
-
-	cpt = 0
-	nbNode = graph.numberOfNodes()
-	for n in graph.getNodes() :
-		cpt = cpt + 1
-		print '{} / {}'.format(cpt, nbNode)
-		for m in graph.getNodes() :
-			if not m == n and not graph.hasEdge(m,n):
-				if hasSubredditInCommon(graph, m, n):
-					graph.addEdge(m,n)
+			OTS.append(n)
+	inTestSet = didntGotPizza.inducedSubGraph(ITS)
+	inTestSet.setName("inTestSet")
+	outTestSet = didntGotPizza.inducedSubGraph(OTS)
+	outTestSet.setName("outTestSet")
 
 def read_dataset(path):
 	with codecs.open(path, 'r', 'utf-8') as myFile:
@@ -115,10 +125,6 @@ def read_dataset(path):
 	
 def hasSubredditInCommon(graph, m, n):
 	subreddit = graph.getStringVectorProperty("requester_subreddits_at_request")
-	print set(subreddit.getNodeValue(m))
-	print set(subreddit.getNodeValue(n))
-	print (set(subreddit.getNodeValue(m)) - set(subreddit.getNodeValue(n)))
-	print "*************************"
-	if not len(set(subreddit.getNodeValue(m)) - set(subreddit.getNodeValue(n))) == 0 :
+	if len(set(subreddit.getNodeValue(m)).intersection(set(subreddit.getNodeValue(n)))) > 0 :
 		return True
 	return False
