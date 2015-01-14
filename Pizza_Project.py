@@ -51,7 +51,97 @@ def main(graph):
 	viewTexture = graph.getStringProperty("viewTexture")
 	viewTgtAnchorShape = graph.getIntegerProperty("viewTgtAnchorShape")
 	viewTgtAnchorSize = graph.getSizeProperty("viewTgtAnchorSize")
+	
+	money = graph.addNode()
+	viewLabel.setNodeStringValue(money,"money")	
+	
+	job = graph.addNode()
+	viewLabel.setNodeStringValue(job,"job")
+	
+	family = graph.addNode()
+	viewLabel.setNodeStringValue(family,"family")
+	
+	student = graph.addNode()
+	viewLabel.setNodeStringValue(student, "student")
+	
+	craving = graph.addNode()
+	viewLabel.setNodeStringValue(craving, "craving")
+	
+	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/money.txt')
+	moneyKeyWord = myFile.read()
+	moneyKeyWord = moneyKeyWord.split('\r\n')	
+	
+	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/job.txt')
+	jobKeyWord = myFile.read()
+	jobKeyWord = jobKeyWord.split('\r\n')	
+	
+	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/family.txt')
+	familyKeyWord = myFile.read()
+	familyKeyWord = familyKeyWord.split('\r\n')	
+	
+	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/student.txt')
+	studentKeyWord = myFile.read()
+	studentKeyWord = studentKeyWord.split('\r\n')	
+	
+	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/desire.txt')
+	cravingKeyWord = myFile.read()
+	cravingKeyWord = cravingKeyWord.split('\r\n')
+	
+	for n in graph.getNodes():
+		request = graph.getStringProperty("request_text").getNodeValue(n)
+		cpt = 0
+		for keyWord in moneyKeyWord:
+			cpt += request.count(keyWord)
+		if(cpt > 2):
+			graph.addEdge(n,money)
+			
+		cpt = 0
+		for keyWord in jobKeyWord:
+			cpt += request.count(keyWord)
+		if(cpt > 2):
+			graph.addEdge(n,job)
+		
+		cpt = 0
+		for keyWord in familyKeyWord:
+			cpt += request.count(keyWord)
+		if(cpt > 2):
+			graph.addEdge(n,family)
+			
+		cpt = 0
+		for keyWord in cravingKeyWord:
+			cpt += request.count(keyWord)
+		if(cpt > 2):
+			graph.addEdge(n,craving)
+			
+		cpt = 0
+		for keyWord in studentKeyWord:
+			cpt += request.count(keyWord)
+		if(cpt > 2):
+			graph.addEdge(n,student)
+	
+#	gotPizza = graph.getSubGraph("gotPizza")
+#	didntGotPizza = graph.getSubGraph("didntGotPizza")
+#	
+#	sub = graph.getStringVectorProperty("requester_subreddits_at_request")
+#	
+#	for n in didntGotPizza.getNodes():
+#		subreddits = sub.getNodeValue(n)
+#		for s in subreddits:
+#			subGraph = didntGotPizza.getSubGraph(s)
+#			if subGraph is None:
+#				subGraph = didntGotPizza.addSubGraph(s)
+#			subGraph.addNode(n)
 
+def messageLength(graph):
+	messageLength = graph.getIntegerProperty("messageLength")
+	post = graph.getStringProperty("request_text_edit_aware")
+	
+	for n in graph.getNodes():
+		messageLength.setNodeValue(n,len(post.getNodeValue(n)))
+
+def generateGraph(graph):
+	graph.setName("RAOP")	
+	
 	path = '/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/pizza_request_dataset.json'
 	dataset = read_dataset(path)
 	
@@ -71,13 +161,13 @@ def main(graph):
 			elif valueType is list:
 				graph.getStringVectorProperty(key).setNodeValue(newNode,r[key])
 
-	nodes = list(graph.getNodes())
-	nbNodes = len(nodes)
-	
-	for i in range(0,nbNodes-1):
-		for j in range(i+1,nbNodes):
-				if hasSubredditInCommon(graph, nodes[i], nodes[j]):
-					graph.addEdge(nodes[i],nodes[j])
+#	nodes = list(graph.getNodes())
+#	nbNodes = len(nodes)
+#	
+#	for i in range(0,nbNodes-1):
+#		for j in range(i+1,nbNodes):
+#				if hasSubredditInCommon(graph, nodes[i], nodes[j]):
+#					graph.addEdge(nodes[i],nodes[j])
 
 	GP = []
 	DGP = []

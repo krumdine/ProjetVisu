@@ -1,0 +1,47 @@
+taille des message :
+	- got : 499
+	- dont : 374
+
+downvotes de la requête:
+	- got : 2
+	- dont : 2
+
+upvotes de la requête :
+	- got : 8
+	- dont : 5
+
+nombre de commentaires de la requête :
+	- got : 5
+	- dont : 2
+
+âge du demandeur (en jours) :
+	- got : 280
+	- dont : 244
+
+durée (en jours) entre le premier post sur raop et la requête :
+	- got : 26
+	- dont : 13
+
+nombre de commentaires du demandeur :
+	- got : 128
+	- dont : 112
+
+nombre de commentaires dans raop :
+	- got : 1
+	- dont : 0
+
+nombre de posts du demandeur :
+	- got : 24
+	- dont : 20
+
+nombre de subreddits :
+	- got : 19
+	- dont : 17
+
+upvotes - downvotes :
+	- got : 1446
+	- dont : 1071
+
+upvotes + downvotes :
+	- got : 5119
+	- dont : 3256
