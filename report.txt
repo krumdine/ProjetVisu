@@ -1,0 +1,54 @@
+===== Projet de visualisation et d'analyse =====
+
+
+==== Introduction ====
+
+Dans ce rapport, nous allons vous exposer les différentes étapes de l'élaboration de notre projet. Nous reviendrons ainsi sur la méthodologie utilisée puis nous verrons les résultats obtenus et nous les analyserons. Enfin nous discuterons de nos conclusions et de la pertinence de celles-ci.
+
+#Tout au long de ce rapport, nous tenterons de garder un regard critique sur nos choix
+
+=== Jeu de données ===
+Nous avons choisi pour ce projet d'utiliser le jeu de données accessible à [[http://cs.stanford.edu/~althoff/raop-dataset/|cette adresse]]. Il se base sur des données récupérées sur reddit.com, au sein du subreddit //Random Acts Of Pizza//. Le principe de ce subreddit est simple, les utilisateurs demandent une pizza en tentant de convaincre via leur message et les autres utilisateurs peuvent alors décider d'offrir une pizza au demandeur.
+
+Le jeu de données propose déjà une étude de celui-ci, tirant ses propres conclusions sur ce qui fait le succès d'une requête sur Random Acts Of Pizza.
+
+Dans notre étude, nous proposons également de répondre à la question suivante : **Quels facteurs influencent la réussite d'une demande de pizza gratuite ?**
+
+
+==== Méthodologie ====
+
+Lors de notre analyse, nous avons choisi de nous intéresser aux critères suivants :
+* La longueur du message initial
+* Le nombre de vote de la demande
+* La popularité générale au sein de reddit du demandeur
+* L'activité du demandeur
+* Les types de sujet abordés au sein de la demande textuelle (argent, travail, etc.)
+
+Nous avons utilisé les différents outils à notre disposition au sein de Tulip, tels que la visualisation direct du graphe, les histogrammes ou ...
+
+==== Implémentation ====
+
+Parmis les critères choisis, la majeure partie s'appuie sur des données chiffres que nous avons jugé pertinent de mettre en évidence à l'aide des histogrammes (
+
+En revanche, les sujets abordés au sein de la requête ont nécessité un pré-traitement ainsi que la construction de ... au sein du graphe. Ce pré-traitement consiste simplement à analyser le texte et d'y repérer un ou plusieurs mot-clés associés aux catégories préalablement établies. Nous notons que nous avons choisi d'utiliser les mots-clés fournis au sein du jeu de donnée pour effectuer cette détection.
+
+Nous avons testé l'application de cette méthode selon différents nombres de mot-clé nécessaire pour être inclu dans une catégorie. Nous avons ainsi déterminé que trois mots-clés semble être un bon compromis et permet d'aboutir à des résultats intéressant.
+
+
+
+==== Résultats ====
+
+{{:vincent_bocquel:raop_histograms.png?600|}}
+
+{{:vincent_bocquel:raop_graph.png?600|}}
+
+==== Conclusion ====
+
+
+
+==== Annexe ====
+
+
+<file python RAOP_Analysis.py>
+
+</file>
