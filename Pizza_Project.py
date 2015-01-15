@@ -53,21 +53,28 @@ def main(graph):
 	viewTgtAnchorShape = graph.getIntegerProperty("viewTgtAnchorShape")
 	viewTgtAnchorSize = graph.getSizeProperty("viewTgtAnchorSize")
 	# Preprocess data
-#	generateGraph(graph)
-	analyseRequestMessage(graph)
+	generateGraph(graph)
+	analyzeRequestMessage(graph)
 	# Display
 #	updateVisualization()
 
 	
 def analyzeRequestMessage(graph):
 	viewLabel = graph.getStringProperty("viewLabel")
-	narratives = {"money":{"keywords","node"},"job":{"keywords","node"},"family":{"keywords","node"},"student":{"keywords","node"},"desire":{"keywords","node"}}
-	basePath = '/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/'
-	# print os.getcwd()
+	narratives = {
+		"money":{"keywords":[],"node":None},
+		"job":{"keywords":[],"node":None},
+		"family":{"keywords":[],"node":None},
+		"student":{"keywords":[],"node":None},
+		"desire":{"keywords":[],"node":None}
+	}
+#	basePath = '/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/'
+	basePath = '/net/cremi/vbocquel/Cours/S9_BioVisu/ProjetVisu/pizza_request_dataset/narratives/'
+#	basePath =  os.path.join(os.getcwd(),"pizza_request_dataset","narratives")
 	for k in narratives:
 		narratives[k]["node"] = graph.addNode()
 		viewLabel.setNodeStringValue(narratives[k]["node"], k)
-		with open(basePath+k+'.txt','r') as f:
+		with open(basePath+k+".txt",'r') as f:
 			narratives[k]["keywords"] = f.read().split('\r\n')
 	
 	for n in graph.getNodes():
@@ -100,8 +107,8 @@ def messageLength(graph):
 		messageLength.setNodeValue(n,len(post.getNodeValue(n)))
 
 def generateGraph(graph):
-	graph.setName("RAOP")	
-	path = '/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/pizza_request_dataset.json'
+	graph.setName("RAOP")
+	path = '/net/cremi/vbocquel/Cours/S9_BioVisu/ProjetVisu/pizza_request_dataset/pizza_request_dataset.json'
 	dataset = read_dataset(path)
 	for r in dataset:
 		newNode = graph.addNode()
