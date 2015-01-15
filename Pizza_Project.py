@@ -29,6 +29,13 @@ import json
 # the main(graph) function must be defined 
 # to run the script on the current graph
 
+######################
+## Config
+
+# rootPath = os.getcwd()
+rootPath = "/net/cremi/vbocquel/Cours/S9_BioVisu/ProjetVisu/"
+# rootPath = "/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/"
+
 def main(graph): 
 	# Default Properties
 	viewBorderColor = graph.getColorProperty("viewBorderColor")
@@ -54,6 +61,7 @@ def main(graph):
 	viewTgtAnchorSize = graph.getSizeProperty("viewTgtAnchorSize")
 	# Preprocess data
 	generateGraph(graph)
+	createMessageLengthProperty(graph)
 	analyzeRequestMessage(graph)
 	# Display
 #	updateVisualization()
@@ -68,13 +76,12 @@ def analyzeRequestMessage(graph):
 		"student":{"keywords":[],"node":None},
 		"desire":{"keywords":[],"node":None}
 	}
-#	basePath = '/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/'
-	basePath = '/net/cremi/vbocquel/Cours/S9_BioVisu/ProjetVisu/pizza_request_dataset/narratives/'
-#	basePath =  os.path.join(os.getcwd(),"pizza_request_dataset","narratives")
+
+	basePath =  os.path.join(rootPath,"pizza_request_dataset","narratives")
 	for k in narratives:
 		narratives[k]["node"] = graph.addNode()
 		viewLabel.setNodeStringValue(narratives[k]["node"], k)
-		with open(basePath+k+".txt",'r') as f:
+		with open(os.path.join(basePath, k+".txt"),'r') as f:
 			narratives[k]["keywords"] = f.read().split('\r\n')
 	
 	for n in graph.getNodes():
@@ -100,15 +107,16 @@ def analyzeRequestMessage(graph):
 #				subGraph = didntGotPizza.addSubGraph(s)
 #			subGraph.addNode(n)
 
-def messageLength(graph):
+def createMessageLengthProperty(graph):
 	messageLength = graph.getIntegerProperty("messageLength")
 	post = graph.getStringProperty("request_text_edit_aware")
 	for n in graph.getNodes():
 		messageLength.setNodeValue(n,len(post.getNodeValue(n)))
 
+## Add nodes from the dataset
 def generateGraph(graph):
 	graph.setName("RAOP")
-	path = '/net/cremi/vbocquel/Cours/S9_BioVisu/ProjetVisu/pizza_request_dataset/pizza_request_dataset.json'
+	path = os.path.join(rootPath, "pizza_request_dataset", "pizza_request_dataset.json")
 	dataset = read_dataset(path)
 	for r in dataset:
 		newNode = graph.addNode()
@@ -126,13 +134,6 @@ def generateGraph(graph):
 			elif valueType is list:
 				graph.getStringVectorProperty(key).setNodeValue(newNode,r[key])
 
-#	nodes = list(graph.getNodes())
-#	nbNodes = len(nodes)
-#	for i in range(0,nbNodes-1):
-#		for j in range(i+1,nbNodes):
-#				if hasSubredditInCommon(graph, nodes[i], nodes[j]):
-#					graph.addEdge(nodes[i],nodes[j])
-
 	# Generate subgraphes depending on the success of the request
 	GP = []
 	DGP = []
@@ -147,37 +148,45 @@ def generateGraph(graph):
 	didntGotPizza = graph.inducedSubGraph(DGP)
 	didntGotPizza.setName("didntGotPizza")
 	
-#	ITS = []
-#	OTS = []
-#	inTestSetProperty = graph.getBooleanProperty('in_test_set')
-#	for n in gotPizza.getNodes() :
-#		if inTestSetProperty.getNodeValue(n):
-#			ITS.append(n)
-#		else:
-#			OTS.append(n)
-#	inTestSet = gotPizza.inducedSubGraph(ITS)
-#	inTestSet.setName("inTestSet")
-#	outTestSet = gotPizza.inducedSubGraph(OTS)
-#	outTestSet.setName("outTestSet")
+	# Generate subsubgraph on each subgraph depending on the test set property
+#	generateSubGraphTestSet(graphe, gotPizza)
+#	generateSubGraphTestSet(graphe, didntGotPizza)
 	
-#	ITS = []
-#	OTS = []
-#	for n in didntGotPizza.getNodes() :
-#		if inTestSetProperty.getNodeValue(n):
-#			ITS.append(n)
-#		else:
-#			OTS.append(n)
-#	inTestSet = didntGotPizza.inducedSubGraph(ITS)
-#	inTestSet.setName("inTestSet")
-#	outTestSet = didntGotPizza.inducedSubGraph(OTS)
-#	outTestSet.setName("outTestSet")
+	
+## Add subgraph depending on if node are in test set
+def generateSubGraphTestSet(graph, subgraph):
+		ITS = []
+		OTS = []
+		inTestSetProperty = graph.getBooleanProperty('in_test_set')
+		for n in subgraph.getNodes() :
+			if inTestSetProperty.getNodeValue(n):
+				ITS.append(n)
+			else:
+				OTS.append(n)
+		inTestSet = subgraph.inducedSubGraph(ITS)
+		inTestSet.setName("inTestSet")
+		outTestSet = subgraph.inducedSubGraph(OTS)
+		outTestSet.setName("outTestSet")
 
+
+## Conveniant function to retrieve data from json file
 def read_dataset(path):
 	with codecs.open(path, 'r', 'utf-8') as myFile:
 		content = myFile.read()
 	dataset = json.loads(content)
 	return dataset
-	
+
+
+## Test if two requesters have at least one common subreddit
 def hasSubredditInCommon(graph, m, n):
 	subreddit = graph.getStringVectorProperty("requester_subreddits_at_request")
 	return len(set(subreddit.getNodeValue(m)).intersection(set(subreddit.getNodeValue(n)))) > 0
+
+
+def generateEdgesOnCommonSubreddit(graph):
+	nodes = list(graph.getNodes())
+	nbNodes = len(nodes)
+	for i in range(0,nbNodes-1):
+		for j in range(i+1,nbNodes):
+				if hasSubredditInCommon(graph, nodes[i], nodes[j]):
+					graph.addEdge(nodes[i],nodes[j])
