@@ -51,6 +51,73 @@ def main(graph):
 	viewTexture = graph.getStringProperty("viewTexture")
 	viewTgtAnchorShape = graph.getIntegerProperty("viewTgtAnchorShape")
 	viewTgtAnchorSize = graph.getSizeProperty("viewTgtAnchorSize")
+
+########################
+### Global variables ###
+########################
+category = ["family","job","student","money","craving"]
+
+########################
+
+def subGraphsPerCategory(graph):		
+	subGraphs = { "family" : [],"job" : [],"student" : [],"money" : [],"craving" : []}	
+		
+	for n in graph.getNodes():
+		if(not viewLabel.getNodeValue(n) in ["family","job","student","money","craving"]):
+			for m in graph.getInOutNodes(n):
+				subGraphs[viewLabel.getNodeValue(m)].append(n)
+		else:
+			for i in category:
+				subGraphs[i].append(n)
+	for i in subGraphs.keys():
+		graph.inducedSubGraph(subGraphs[i]).setName(i)
+
+def stats(graph):
+	received = graph.getBooleanProperty("requester_received_pizza")
+	viewLabel = graph.getStringProperty("viewLabel")
+	
+	for n in graph.getNodes():
+		if( viewLabel.getNodeValue(n) in ["family","job","student","money","craving"]):
+			cpt = 0.
+			cptMax = 0.
+			for m in graph.getInOutNodes(n):
+				cptMax += 1.
+				if( received.getNodeValue(m) ):
+					cpt += 1.
+			print viewLabel.getNodeValue(n) + " : " + str(cpt) + "/" + str(cptMax) + "=>" + str((cpt/cptMax)*100.)
+	
+	print '\n'
+	
+	res = [[0.,0.],[0.,0.], [0.,0.], [0.,0.], [0.,0.], [0.,0.]]
+	
+	res4 = { "family" : 0,"job" : 0,"student" : 0,"money" : 0,"craving" : 0}
+	res5 = { "family" : 0,"job" : 0,"student" : 0,"money" : 0,"craving" : 0}
+	
+	for n in graph.getNodes():
+		if( not viewLabel.getNodeValue(n) in ["family","job","student","money","craving"]):
+			cpt = 0
+			for m in graph.getInOutNodes(n):
+				cpt += 1
+			res[cpt][1] += 1.
+			if( received.getNodeValue(n) ):
+				res[cpt][0] += 1.
+			if(cpt == 4):
+				for m in graph.getInOutNodes(n):
+					res4[viewLabel.getNodeValue(m)]+=1
+			if(cpt == 5):
+				for m in graph.getInOutNodes(n):
+					res5[viewLabel.getNodeValue(m)]+=1
+
+	for i in range(0,6):
+		print str(res[i][0]) + '/' + str(res[i][1]) + ' => ' + str( 100. * (res[i][0]/ res[i][1]))
+	
+	print '\n'	
+	
+	print res4
+	print res5
+
+def categorizeNodes(graph,s):
+	viewLabel = graph.getStringProperty("viewLabel")	
 	
 	money = graph.addNode()
 	viewLabel.setNodeStringValue(money,"money")	
@@ -92,45 +159,41 @@ def main(graph):
 		cpt = 0
 		for keyWord in moneyKeyWord:
 			cpt += request.count(keyWord)
-		if(cpt > 2):
+		if(cpt > s):
 			graph.addEdge(n,money)
 			
 		cpt = 0
 		for keyWord in jobKeyWord:
 			cpt += request.count(keyWord)
-		if(cpt > 2):
+		if(cpt > s):
 			graph.addEdge(n,job)
 		
 		cpt = 0
 		for keyWord in familyKeyWord:
 			cpt += request.count(keyWord)
-		if(cpt > 2):
+		if(cpt > s):
 			graph.addEdge(n,family)
 			
 		cpt = 0
 		for keyWord in cravingKeyWord:
 			cpt += request.count(keyWord)
-		if(cpt > 2):
+		if(cpt > s):
 			graph.addEdge(n,craving)
 			
 		cpt = 0
 		for keyWord in studentKeyWord:
 			cpt += request.count(keyWord)
-		if(cpt > 2):
+		if(cpt > s):
 			graph.addEdge(n,student)
-	
-#	gotPizza = graph.getSubGraph("gotPizza")
-#	didntGotPizza = graph.getSubGraph("didntGotPizza")
-#	
-#	sub = graph.getStringVectorProperty("requester_subreddits_at_request")
-#	
-#	for n in didntGotPizza.getNodes():
-#		subreddits = sub.getNodeValue(n)
-#		for s in subreddits:
-#			subGraph = didntGotPizza.getSubGraph(s)
-#			if subGraph is None:
-#				subGraph = didntGotPizza.addSubGraph(s)
-#			subGraph.addNode(n)
+
+def colorNodes(graph):
+	gotPizza = graph.getSubGraph("gotPizza")
+	didntGotPizza = graph.getSubGraph("didntGotPizza")
+	viewColor = graph.getColorProperty("viewColor")
+	for n in gotPizza.getNodes():
+		viewColor.setNodeValue(n,tlp.Color(0,255,0,255))
+	for n in didntGotPizza.getNodes():
+		viewColor.setNodeValue(n,tlp.Color(0,0,255,255))
 
 def messageLength(graph):
 	messageLength = graph.getIntegerProperty("messageLength")
