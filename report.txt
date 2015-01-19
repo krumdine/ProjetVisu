@@ -51,6 +51,28 @@ Nous constatons que le sujet qui revient le plus fréquemment dans les demandes 
 
 Dans ces histogrammes, nous voyons que...
 
+
+Suite à cet échec, nous avons essayé de prendre une approche différente, nous avons essayé de catégoriser les différents posts, en nous inspirant des travaux déjà effectué sur le sujet, en cinq catégories : désire, argent, travail, famille, et, étudiant. Et nous avons obtenu les résultats suivants :
+
+|              ^ pourcentage de personnes ayant obetnu leur pizza
+^ desire       | 26.16          |
+^ money        | 28.06          |
+^ family       | 33.76          |
+^ student      | 27.88          |
+^ job          | 35.06          |
+
+|nombre de sujets évoqués  ^ pourcentage de personnes ayant obetnu leur pizza
+^ 0       			       | 16.77          |
+^ 1                        | 26.77          |
+^ 2                        | 30.15          |
+^ 3                        | 37.14          |
+^ 4                        | 35.0           |
+^ 5                        | 100.0          |
+
+Les nombres de posts évoquant 4 et 5 sujets sont respictevements 20 et 2, ces nombres sont malheureusement trop faible pour être pertinent. Mais on peut néanmoins observer que plus le nombre de sujet abordé est élevé plus le taux de réussite est élevé, sans doute dû au fait que plus l'on évoque de sujets plus de personnes peuvent être touché par ce que l'on dit. De plus, le fait de n'aborder aucun des sujets étudiés à un effet très négatif puisque les personnes qui font ça n'ont un taux de réussite que de 16.77%, 10 points derrière ceux qui se contentent de ne parler que d'un sujet. 
+
+On observe ainsi que les sujets qui semblent le plus à même d'inciter une autre personne à vous offrir une pizza sont la famille et le travail.
+
 ==== Conclusion ====
 
 
