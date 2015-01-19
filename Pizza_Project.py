@@ -64,7 +64,7 @@ def main(graph):
 	# Preprocess data
 	generateGraph(graph)
 	colorNodes(graph)
-	categorizeNodes(graph,3)
+	categorizeNodes(graph,2)
 	subGraphsPerCategory(graph)
 	stats(graph)
 
