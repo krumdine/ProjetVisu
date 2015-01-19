@@ -36,7 +36,7 @@ category = ["family","job","student","money","desire"]
 
 # rootPath = os.getcwd()
 # rootPath = "/net/cremi/vbocquel/Cours/S9_BioVisu/ProjetVisu/"
- rootPath = "/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/"
+rootPath = "/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/"
 
 
 def main(graph): 
@@ -62,17 +62,18 @@ def main(graph):
 	viewTgtAnchorShape = graph.getIntegerProperty("viewTgtAnchorShape")
 	viewTgtAnchorSize = graph.getSizeProperty("viewTgtAnchorSize")
 	# Preprocess data
-#	generateGraph(graph)
-#	colorNodes(graph)
-#	categorizeNodes(graph,3)
-#	subGraphsPerCategory(graph)
-#	stats(graph)
+	generateGraph(graph)
+	colorNodes(graph)
+	categorizeNodes(graph,3)
+	subGraphsPerCategory(graph)
+	stats(graph)
 
 ########################
 
 def subGraphsPerCategory(graph):		
-	subGraphs = { "family" : [],"job" : [],"student" : [],"money" : [],"desire" : []}	
-		
+	subGraphs = { "family" : [],"job" : [],"student" : [],"money" : [],"desire" : []}
+	viewLabel = graph.getStringProperty("viewLabel")
+	
 	for n in graph.getNodes():
 		if(not viewLabel.getNodeValue(n) in ["family","job","student","money","desire"]):
 			for m in graph.getInOutNodes(n):
@@ -142,7 +143,7 @@ def categorizeNodes(graph, s):
 	for k in narratives:
 		narratives[k]["node"] = graph.addNode()
 		viewLabel.setNodeStringValue(narratives[k]["node"], k)
-		with open(basePath+k+'.txt','r') as f:
+		with open(basePath+ '/' + k+'.txt','r') as f:
 			narratives[k]["keywords"] = f.read().split('\r\n')
 	
 	for n in graph.getNodes():
