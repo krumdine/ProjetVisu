@@ -39,17 +39,49 @@ Nous avons testé l'application de cette méthode avec différents nombres de mo
 
 ==== Résultats ====
 
-<!-- L'exécution de notre script permet d'obtenir une visualisation des différentes catégories de message (travail, famille, argent, désir, étude) avec une différenciation par couleur selon le succès de la requête.
+L'exécution de notre script permet d'obtenir une visualisation des différentes catégories de message (travail, famille, argent, désir, étude) avec une différenciation par couleur selon le succès de la requête.
 
 {{:vincent_bocquel:raop_graph.png?600|}}
 
-Cette image présente donc le graphe telle qu'obtenu à l'issue de l'exécution du script. -->
+Cette image présente donc le graphe telle qu'obtenu à l'issue de l'exécution du script et après avoir appliqué l'algorithme //MMM Example No Twist Layout//.
 
 Nous constatons que le sujet qui revient le plus fréquemment dans les demandes est l'argent mais le taux de requête ayant été un succès n'est pas considérablement plus élevé. L'impact de l'utilisation de ce lexique sur l'obtention de la pizza n'est donc pas significatif.
 
+Dans les images suivantes, nous mettons en évidence les sous-graphes de chacune des catégories choisies. Celles-ci permettent également d'appuyer notre premier constat.
+
+{{:vincent_bocquel:raop_graph_money.png?500|}}
+{{:vincent_bocquel:raop_graph_family.png?500|}}
+{{:vincent_bocquel:raop_graph_job.png?500|}}
+{{:vincent_bocquel:raop_graph_craving.png?500|}}
+
+
 {{:vincent_bocquel:raop_histograms.png?600|}}
 
-Dans ces histogrammes, nous voyons que...
+Dans ces histogrammes, nous voyons que des critères tels que le nombre de vote négatif, positif, l'âge du compte ou encore la nombre de message sur reddit ne permettent pas d'idenfitier des facteurs directement liés au succès d'une demande.
+En revanche, la taille du message semble avoir un impact plus significatif comme nous le montre l'histogramme suivant :
+
+{{:vincent_bocquel:raop_histogram_messageLength.png?400|}}
+
+Enfin, nous avons également calculé des moyennes pour les différentes informations que nous avons résumé au sein du tableau suivant.
+
+^ Critère ^ Pizza reçue ^ Pizza non reçue
+^ Taille des messages | 499 | 374
+^ Downvotes de la requête | 2 | 2
+^ Upvotes de la requête | 8 | 5
+^ Nombre de commentaires | 5 | 2
+^ Âge du demandeur* | 280 | 244
+^ Durée* entre le premier post sur raop et la requête | 26 | 13
+^ Nombre de commentaires du demandeur | 128 | 112
+^ Nombre de commentaires dans raop | 1 | 0
+^ Nombre de posts du demandeur | 24 | 20
+^ Nombre de subreddits | 19 | 17
+^ Upvotes - downvotes | 1446 | 1071
+^ Upvotes + downvotes | 5119 | 3256
+
+* Exprimé en jours
+
+Ces résultats nous confirment ce que nous avions pu entrevoir via les histogrammes, à savoir que la taille du message a un impact sur la réussite de la demande. Cependant nous constatons de manière plus franche l'impact de certains autres facteurs tels que la popularité (générale à reddit et non au subreddit) du demandeur ainsi que le temps passé sur le subreddit RAOP avant que la personne n'effectue sa propre demande.
+
 
 
 Suite à cet échec, nous avons essayé de prendre une approche différente, nous avons essayé de catégoriser les différents posts, en nous inspirant des travaux déjà effectué sur le sujet, en cinq catégories : désire, argent, travail, famille, et, étudiant. Et nous avons obtenu les résultats suivants :
@@ -74,6 +106,7 @@ Les nombres de posts évoquant 4 et 5 sujets sont respictevements 20 et 2, ces n
 On observe ainsi que les sujets qui semblent le plus à même d'inciter une autre personne à vous offrir une pizza sont la famille et le travail.
 
 ==== Conclusion ====
+
 
 
 
