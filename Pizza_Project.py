@@ -131,7 +131,13 @@ def categorizeNodes(graph, s):
 	viewLabel = graph.getStringProperty("viewLabel")
 	basePath = os.path.join(rootPath, 'pizza_request_dataset', 'narratives')
 
-	narratives = {"money":{"keywords","node"},"job":{"keywords","node"},"family":{"keywords","node"},"student":{"keywords","node"},"desire":{"keywords","node"}}
+	narratives = {
+		"money":{"keywords":[],"node":None},
+		"job":{"keywords":[],"node":None},
+		"family":{"keywords":[],"node":None},
+		"student":{"keywords":[],"node":None},
+		"desire":{"keywords":[],"node":None}
+	}
 
 	for k in narratives:
 		narratives[k]["node"] = graph.addNode()
