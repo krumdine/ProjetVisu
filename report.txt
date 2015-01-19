@@ -1,13 +1,11 @@
 ===== Projet de visualisation et d'analyse =====
 
-
 ==== Introduction ====
 
 Dans ce rapport, nous allons vous exposer les différentes étapes de l'élaboration de notre projet. Nous reviendrons ainsi sur la méthodologie utilisée puis nous verrons les résultats obtenus et nous les analyserons. Enfin nous discuterons de nos conclusions et de la pertinence de celles-ci.
 
-#Tout au long de ce rapport, nous tenterons de garder un regard critique sur nos choix
-
 === Jeu de données ===
+
 Nous avons choisi pour ce projet d'utiliser le jeu de données accessible à [[http://cs.stanford.edu/~althoff/raop-dataset/|cette adresse]]. Il se base sur des données récupérées sur reddit.com, au sein du subreddit //Random Acts Of Pizza//. Le principe de ce subreddit est simple, les utilisateurs demandent une pizza en tentant de convaincre via leur message et les autres utilisateurs peuvent alors décider d'offrir une pizza au demandeur.
 
 Le jeu de données propose déjà une étude de celui-ci, tirant ses propres conclusions sur ce qui fait le succès d'une requête sur Random Acts Of Pizza.
@@ -24,23 +22,34 @@ Lors de notre analyse, nous avons choisi de nous intéresser aux critères suiva
 * L'activité du demandeur
 * Les types de sujet abordés au sein de la demande textuelle (argent, travail, etc.)
 
-Nous avons utilisé les différents outils à notre disposition au sein de Tulip, tels que la visualisation direct du graphe, les histogrammes ou ...
+Nous avons utilisé les différents outils à notre disposition au sein de Tulip, tels que la visualisation direct du graphe ou les histogrammes. Nous avons également calculé différentes statistiques que nous jugions pertinentes. 
+
 
 ==== Implémentation ====
 
-Parmis les critères choisis, la majeure partie s'appuie sur des données chiffres que nous avons jugé pertinent de mettre en évidence à l'aide des histogrammes (
+Nous avons choisi d'importer nos données (JSON) au moyen de notre script Python (fourni en annexe). Nous générons donc les différents sommets en leur attribuant les propriétés qui leurs sont relatives au moyen d'une fonction generateGraph(). Nous avons également choisi de hiérarchiser notre graphe en sous graphes selon la réussite ou l'échec de la demande de pizza. Chacun de ces sous-graphes aura ainsi une couleur distincte de manière à faciliter la visualisation des sommets.
 
-En revanche, les sujets abordés au sein de la requête ont nécessité un pré-traitement ainsi que la construction de ... au sein du graphe. Ce pré-traitement consiste simplement à analyser le texte et d'y repérer un ou plusieurs mot-clés associés aux catégories préalablement établies. Nous notons que nous avons choisi d'utiliser les mots-clés fournis au sein du jeu de donnée pour effectuer cette détection.
 
-Nous avons testé l'application de cette méthode selon différents nombres de mot-clé nécessaire pour être inclu dans une catégorie. Nous avons ainsi déterminé que trois mots-clés semble être un bon compromis et permet d'aboutir à des résultats intéressant.
+Parmis les critères d'étude choisis, la majeure partie s'appuie sur des données chiffrées que nous avons jugé pertinent de mettre en évidence à l'aide des histogrammes.
 
+En revanche, les sujets abordés au sein de la requête ont nécessité un pré-traitement. Celui-ci consiste simplement à analyser le texte et à y repérer un certain nombre de mot-clés associés aux catégories préalablement établies. Nous notons que nous avons choisi d'utiliser les mots-clés fournis au sein du jeu de donnée pour effectuer cette détection.
+
+Nous avons testé l'application de cette méthode avec différents nombres de mot-clé nécessaire pour être inclu dans une catégorie. Nous avons ainsi déterminé que trois mots-clés semblait être un bon compromis et permettait d'aboutir à des résultats intéressant.
 
 
 ==== Résultats ====
 
-{{:vincent_bocquel:raop_histograms.png?600|}}
+<!-- L'exécution de notre script permet d'obtenir une visualisation des différentes catégories de message (travail, famille, argent, désir, étude) avec une différenciation par couleur selon le succès de la requête.
 
 {{:vincent_bocquel:raop_graph.png?600|}}
+
+Cette image présente donc le graphe telle qu'obtenu à l'issue de l'exécution du script. -->
+
+Nous constatons que le sujet qui revient le plus fréquemment dans les demandes est l'argent mais le taux de requête ayant été un succès n'est pas considérablement plus élevé. L'impact de l'utilisation de ce lexique sur l'obtention de la pizza n'est donc pas significatif.
+
+{{:vincent_bocquel:raop_histograms.png?600|}}
+
+Dans ces histogrammes, nous voyons que...
 
 ==== Conclusion ====
 

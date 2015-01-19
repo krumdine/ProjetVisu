@@ -29,6 +29,16 @@ import json
 # the main(graph) function must be defined 
 # to run the script on the current graph
 
+########################
+### Global variables ###
+########################
+category = ["family","job","student","money","desire"]
+
+# rootPath = os.getcwd()
+# rootPath = "/net/cremi/vbocquel/Cours/S9_BioVisu/ProjetVisu/"
+ rootPath = "/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/"
+
+
 def main(graph): 
 	viewBorderColor = graph.getColorProperty("viewBorderColor")
 	viewBorderWidth = graph.getDoubleProperty("viewBorderWidth")
@@ -51,19 +61,20 @@ def main(graph):
 	viewTexture = graph.getStringProperty("viewTexture")
 	viewTgtAnchorShape = graph.getIntegerProperty("viewTgtAnchorShape")
 	viewTgtAnchorSize = graph.getSizeProperty("viewTgtAnchorSize")
-
-########################
-### Global variables ###
-########################
-category = ["family","job","student","money","craving"]
+	# Preprocess data
+#	generateGraph(graph)
+#	colorNodes(graph)
+#	categorizeNodes(graph,3)
+#	subGraphsPerCategory(graph)
+#	stats(graph)
 
 ########################
 
 def subGraphsPerCategory(graph):		
-	subGraphs = { "family" : [],"job" : [],"student" : [],"money" : [],"craving" : []}	
+	subGraphs = { "family" : [],"job" : [],"student" : [],"money" : [],"desire" : []}	
 		
 	for n in graph.getNodes():
-		if(not viewLabel.getNodeValue(n) in ["family","job","student","money","craving"]):
+		if(not viewLabel.getNodeValue(n) in ["family","job","student","money","desire"]):
 			for m in graph.getInOutNodes(n):
 				subGraphs[viewLabel.getNodeValue(m)].append(n)
 		else:
@@ -77,7 +88,7 @@ def stats(graph):
 	viewLabel = graph.getStringProperty("viewLabel")
 	
 	for n in graph.getNodes():
-		if( viewLabel.getNodeValue(n) in ["family","job","student","money","craving"]):
+		if( viewLabel.getNodeValue(n) in ["family","job","student","money","desire"]):
 			cpt = 0.
 			cptMax = 0.
 			for m in graph.getInOutNodes(n):
@@ -90,11 +101,11 @@ def stats(graph):
 	
 	res = [[0.,0.],[0.,0.], [0.,0.], [0.,0.], [0.,0.], [0.,0.]]
 	
-	res4 = { "family" : 0,"job" : 0,"student" : 0,"money" : 0,"craving" : 0}
-	res5 = { "family" : 0,"job" : 0,"student" : 0,"money" : 0,"craving" : 0}
+	res4 = { "family" : 0,"job" : 0,"student" : 0,"money" : 0,"desire" : 0}
+	res5 = { "family" : 0,"job" : 0,"student" : 0,"money" : 0,"desire" : 0}
 	
 	for n in graph.getNodes():
-		if( not viewLabel.getNodeValue(n) in ["family","job","student","money","craving"]):
+		if( not viewLabel.getNodeValue(n) in ["family","job","student","money","desire"]):
 			cpt = 0
 			for m in graph.getInOutNodes(n):
 				cpt += 1
@@ -116,75 +127,26 @@ def stats(graph):
 	print res4
 	print res5
 
-def categorizeNodes(graph,s):
-	viewLabel = graph.getStringProperty("viewLabel")	
-	
-	money = graph.addNode()
-	viewLabel.setNodeStringValue(money,"money")	
-	
-	job = graph.addNode()
-	viewLabel.setNodeStringValue(job,"job")
-	
-	family = graph.addNode()
-	viewLabel.setNodeStringValue(family,"family")
-	
-	student = graph.addNode()
-	viewLabel.setNodeStringValue(student, "student")
-	
-	craving = graph.addNode()
-	viewLabel.setNodeStringValue(craving, "craving")
-	
-	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/money.txt')
-	moneyKeyWord = myFile.read()
-	moneyKeyWord = moneyKeyWord.split('\r\n')	
-	
-	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/job.txt')
-	jobKeyWord = myFile.read()
-	jobKeyWord = jobKeyWord.split('\r\n')	
-	
-	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/family.txt')
-	familyKeyWord = myFile.read()
-	familyKeyWord = familyKeyWord.split('\r\n')	
-	
-	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/student.txt')
-	studentKeyWord = myFile.read()
-	studentKeyWord = studentKeyWord.split('\r\n')	
-	
-	myFile = open('/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/narratives/desire.txt')
-	cravingKeyWord = myFile.read()
-	cravingKeyWord = cravingKeyWord.split('\r\n')
+def categorizeNodes(graph, s):
+	viewLabel = graph.getStringProperty("viewLabel")
+	basePath = os.path.join(rootPath, 'pizza_request_dataset', 'narratives')
+
+	narratives = {"money":{"keywords","node"},"job":{"keywords","node"},"family":{"keywords","node"},"student":{"keywords","node"},"desire":{"keywords","node"}}
+
+	for k in narratives:
+		narratives[k]["node"] = graph.addNode()
+		viewLabel.setNodeStringValue(narratives[k]["node"], k)
+		with open(basePath+k+'.txt','r') as f:
+			narratives[k]["keywords"] = f.read().split('\r\n')
 	
 	for n in graph.getNodes():
 		request = graph.getStringProperty("request_text").getNodeValue(n)
-		cpt = 0
-		for keyWord in moneyKeyWord:
-			cpt += request.count(keyWord)
-		if(cpt > s):
-			graph.addEdge(n,money)
-			
-		cpt = 0
-		for keyWord in jobKeyWord:
-			cpt += request.count(keyWord)
-		if(cpt > s):
-			graph.addEdge(n,job)
-		
-		cpt = 0
-		for keyWord in familyKeyWord:
-			cpt += request.count(keyWord)
-		if(cpt > s):
-			graph.addEdge(n,family)
-			
-		cpt = 0
-		for keyWord in cravingKeyWord:
-			cpt += request.count(keyWord)
-		if(cpt > s):
-			graph.addEdge(n,craving)
-			
-		cpt = 0
-		for keyWord in studentKeyWord:
-			cpt += request.count(keyWord)
-		if(cpt > s):
-			graph.addEdge(n,student)
+		for k in narratives:
+			cpt = 0
+			for keyWord in narratives[k]["keywords"]:
+				cpt += request.count(keyWord)
+			if(cpt > s):
+				graph.addEdge(n,narratives[k]["node"])
 
 def colorNodes(graph):
 	gotPizza = graph.getSubGraph("gotPizza")
@@ -195,19 +157,12 @@ def colorNodes(graph):
 	for n in didntGotPizza.getNodes():
 		viewColor.setNodeValue(n,tlp.Color(0,0,255,255))
 
-def messageLength(graph):
-	messageLength = graph.getIntegerProperty("messageLength")
-	post = graph.getStringProperty("request_text_edit_aware")
-	
-	for n in graph.getNodes():
-		messageLength.setNodeValue(n,len(post.getNodeValue(n)))
-
 def generateGraph(graph):
 	graph.setName("RAOP")	
-	
-	path = '/net/cremi/jturon/BioInfosEtVisu/Visu/Projet/pizza_request_dataset/pizza_request_dataset.json'
+	path = os.path.join('pizza_request_dataset','pizza_request_dataset.json')
 	dataset = read_dataset(path)
-	
+
+	# Build graph and add properties
 	for r in dataset:
 		newNode = graph.addNode()
 		for key in dataset[0].keys():
@@ -224,14 +179,7 @@ def generateGraph(graph):
 			elif valueType is list:
 				graph.getStringVectorProperty(key).setNodeValue(newNode,r[key])
 
-#	nodes = list(graph.getNodes())
-#	nbNodes = len(nodes)
-#	
-#	for i in range(0,nbNodes-1):
-#		for j in range(i+1,nbNodes):
-#				if hasSubredditInCommon(graph, nodes[i], nodes[j]):
-#					graph.addEdge(nodes[i],nodes[j])
-
+	# Generate subgraphes depending on the success of the request
 	GP = []
 	DGP = []
 	gotPizzaProperty = graph.getBooleanProperty('requester_received_pizza')
@@ -244,31 +192,6 @@ def generateGraph(graph):
 	gotPizza.setName("gotPizza")	
 	didntGotPizza = graph.inducedSubGraph(DGP)
 	didntGotPizza.setName("didntGotPizza")
-	
-	ITS = []
-	OTS = []
-	inTestSetProperty = graph.getBooleanProperty('in_test_set')
-	for n in gotPizza.getNodes() :
-		if inTestSetProperty.getNodeValue(n):
-			ITS.append(n)
-		else:
-			OTS.append(n)
-	inTestSet = gotPizza.inducedSubGraph(ITS)
-	inTestSet.setName("inTestSet")
-	outTestSet = gotPizza.inducedSubGraph(OTS)
-	outTestSet.setName("outTestSet")
-	
-	ITS = []
-	OTS = []
-	for n in didntGotPizza.getNodes() :
-		if inTestSetProperty.getNodeValue(n):
-			ITS.append(n)
-		else:
-			OTS.append(n)
-	inTestSet = didntGotPizza.inducedSubGraph(ITS)
-	inTestSet.setName("inTestSet")
-	outTestSet = didntGotPizza.inducedSubGraph(OTS)
-	outTestSet.setName("outTestSet")
 
 def read_dataset(path):
 	with codecs.open(path, 'r', 'utf-8') as myFile:
@@ -278,6 +201,12 @@ def read_dataset(path):
 	
 def hasSubredditInCommon(graph, m, n):
 	subreddit = graph.getStringVectorProperty("requester_subreddits_at_request")
-	if len(set(subreddit.getNodeValue(m)).intersection(set(subreddit.getNodeValue(n)))) > 0 :
-		return True
-	return False
+	intersection = set(subreddit.getNodeValue(m)).intersection(set(subreddit.getNodeValue(n)))
+	return len(intersection) > 0
+
+def messageLength(graph):
+	messageLength = graph.getIntegerProperty("messageLength")
+	post = graph.getStringProperty("request_text_edit_aware")
+	
+	for n in graph.getNodes():
+		messageLength.setNodeValue(n,len(post.getNodeValue(n)))
